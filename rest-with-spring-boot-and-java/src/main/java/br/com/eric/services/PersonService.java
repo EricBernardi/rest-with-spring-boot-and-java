@@ -4,7 +4,10 @@ import br.com.eric.data.dto.PersonDTO;
 import br.com.eric.exception.ResourceNotFoundException;
 import static br.com.eric.mapper.ObjectMapper.parseListObject;
 import static br.com.eric.mapper.ObjectMapper.parseObject;
+
+import br.com.eric.mapper.PersonMapper;
 import br.com.eric.model.Person;
+import br.com.eric.model.Phone;
 import br.com.eric.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,9 +43,14 @@ public class PersonService {
     public PersonDTO create(PersonDTO person){
         logger.info("Register a new person!");
 
-        var entity = parseObject(person, Person.class);
+        PersonMapper personMapper = new PersonMapper();
+        Person entity = personMapper.transformToEntity(person);
 
-        return parseObject(repository.save(entity), PersonDTO.class);
+        for (Phone phone : entity.getPhones()) {
+            phone.setPerson(entity);
+        }
+
+        return personMapper.transformToDTO(repository.save(entity));
     }
 
     public PersonDTO updatePerson(PersonDTO person){
