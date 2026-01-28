@@ -22,14 +22,49 @@ public class PersonService {
 
     private final AtomicLong counter = new AtomicLong();
     private final Logger logger = Logger.getLogger(PersonService.class.getName());
+    private PersonMapper personMapper;
+
+    public PersonMapper getPersonMapper(){
+        if (personMapper == null) {
+            personMapper = new PersonMapper();
+        }
+        return personMapper;
+    }
 
     @Autowired
     PersonRepository repository;
 
     public List<PersonDTO> findAll() {
         logger.info("Finding all Person!");
-        return parseListObject(repository.findAll(), PersonDTO.class);
+
+        List<Person> peoples = repository.findAll();
+        List<PersonDTO> peoplesDTO = new ArrayList<>();
+
+        if (peoples != null && !peoples.isEmpty()){
+            peoples.forEach(person -> {
+                peoplesDTO.add(getPersonMapper().transformToDTO(person));
+            });
+        }
+
+        return peoplesDTO;
     }
+
+    public List<PersonDTO> findAllWithPhone() {
+        logger.info("Finding all Person with our phone number!");
+
+        List<Person> peoples = repository.findAllWithPhones();
+        List<PersonDTO> peoplesDTO = new ArrayList<>();
+
+        if (peoples != null && !peoples.isEmpty()){
+            peoples.forEach(person -> {
+                peoplesDTO.add(getPersonMapper().transformToDTO(person));
+            });
+        }
+
+        return peoplesDTO;
+    }
+
+
 
     public PersonDTO findById(Long id) {
         logger.info("Finding one Person!");

@@ -27,8 +27,10 @@ public class PersonMapper {
         personDTO.setLastName(person.getLastName());
         personDTO.setGender(person.getGender());
         personDTO.setAddress(person.getAddress());
-        PhoneMapper phoneMapper = new PhoneMapper();
-        person.getPhones().forEach(phone -> personDTO.getPhones().add(phoneMapper.transformToDTO(phone)));
+        if (person.getPhones() != null && !person.getPhones().isEmpty()) {
+            PhoneMapper phoneMapper = new PhoneMapper();
+            person.getPhones().forEach(phone -> personDTO.getPhones().add(phoneMapper.transformToDTO(phone)));
+        }
 
         return personDTO;
     }

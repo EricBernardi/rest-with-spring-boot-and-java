@@ -21,6 +21,11 @@ public class PersonController {
         return service.findAll();
     }
 
+    @GetMapping(value = "/with-phone", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PersonDTO> findAllWithPhone (){
+        return service.findAllWithPhone();
+    }
+
     @GetMapping(value = "/{id}",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
