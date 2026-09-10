@@ -1,0 +1,26 @@
+package br.com.eric.controllers;
+
+import br.com.eric.data.dto.UserDTO;
+import br.com.eric.model.User;
+import br.com.eric.services.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+    @Autowired
+    private AuthService authService;
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User user){
+        String token = authService.authenticate(user.getUsername(), user.getPassword());
+
+        return ResponseEntity.ok(token);
+    }
+}
